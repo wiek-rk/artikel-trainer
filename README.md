@@ -22,7 +22,7 @@ The trainer runs fully in the browser.
 
 ## Vocabulary data
 
-The bundled public deck uses a shareable open vocabulary list plus a small manually curated C2 extension. It does **not** include the dict.cc database.
+The bundled public deck is manually curated for learners. It is smaller than a full dictionary export, but designed to avoid misleading dictionary senses and wrong article practice. It does **not** include the dict.cc database.
 
 If you personally download the official dict.cc translation file, you can import it inside the app on your own device. The import happens locally in your browser and is not uploaded anywhere.
 
