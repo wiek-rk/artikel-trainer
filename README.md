@@ -22,9 +22,11 @@ The trainer runs fully in the browser.
 
 ## Vocabulary data
 
-The bundled public deck is manually curated for learners. It is smaller than a full dictionary export, but designed to avoid misleading dictionary senses and wrong article practice. It does **not** include the dict.cc database.
+The app opens with a small manually curated starter deck so it works immediately.
 
-If you personally download the official dict.cc translation file, you can import it inside the app on your own device. The import happens locally in your browser and is not uploaded anywhere.
+For the larger deck, the app stores only A1-C2 target word lists. It does **not** include dict.cc articles, meanings, or database rows. If you import your own official dict.cc DE → EN text file, the browser locally matches those target words to dict.cc articles and meanings on your own device.
+
+The import happens locally in your browser and is not uploaded anywhere.
 
 Please do not publish or redistribute dict.cc database content unless you have permission from dict.cc.
 
