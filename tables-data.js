@@ -1,14 +1,14 @@
-/* Grammar forms checked against the user's Euro Bhasha charts; see SOURCES.md.
+/* Grammar forms checked against the user's B2 charts; see SOURCES.md.
    Explanations and practice presentation are original. No PDF or dictionary data is bundled. */
 (function (host) {
   'use strict';
   const cases = ['Nominativ', 'Akkusativ', 'Dativ', 'Genitiv'];
   const genders = ['Maskulin', 'Feminin', 'Neutrum', 'Plural'];
   const sources = {
-    articles: 'Articles, Pronouns and Prepositions .pdf, pp. 1–4',
-    genitive: 'Genitiv Euro Bhasha copy.pdf, p. 1',
-    adjectives: 'Adjektive Endungen Euro Bhasha.pdf, p. 1',
-    reflexive: 'Reflexive Verben Euro Bhasha B1_B2.pdf, p. 4; sich mit Dativ.pdf, p. 1'
+    articles: 'B2 article and pronoun charts',
+    genitive: 'B2 Genitiv chart',
+    adjectives: 'B2 adjective-ending charts',
+    reflexive: 'B2 reflexive-pronoun charts'
   };
   const tables = [];
   function add(id, title, group, values, note, source, extra = {}) {
