@@ -13,7 +13,7 @@ Use **Tables** beside **Articles**, or open `index.html#tables`. The existing ar
 
 Tables use the supplied B2 grammar material. See [SOURCES.md](SOURCES.md) for learning notes. No external downloads are needed.
 
-Open the whole folder locally, or serve it with `python -m http.server 8765 --bind 127.0.0.1`. Visit `http://127.0.0.1:8765/#tables`. 
+Open the whole folder locally, or serve it with `python -m http.server 8765 --bind 127.0.0.1`. Visit `http://127.0.0.1:8765/#tables`.
 
 ### Checks
 

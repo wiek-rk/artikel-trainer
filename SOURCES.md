@@ -18,4 +18,3 @@ The tables follow the supplied B2 grammar materials.
 ## Progress
 
 Only the first checked attempt is recorded for each exercise cell. Showing Study earns no credit. Wrong answers enter Review; two subsequent correct attempts clear the cell. Review spans tables and follows the Genitiv filter. Progress uses the separate localStorage key `artikel-tables-v1` and can be exported as JSON. Storage failure leaves practice usable and displays a temporary-progress notice. Article rounds remain in memory as before.
-
