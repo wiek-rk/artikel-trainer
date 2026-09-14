@@ -6,7 +6,7 @@ A fast, offline-friendly German noun article trainer.
 
 Use **Tables** beside **Articles**, or open `index.html#tables`. The existing article round stays in memory while switching sections.
 
-- 17 tables: definite/indefinite/negative articles, dieser/welcher, seven possessive stems, personal/reflexive pronouns, and three adjective-ending patterns.
+- 11 tables: definite/indefinite/negative articles, dieser/welcher, one shared possessive-ending table with practice across seven stems, personal/reflexive pronouns, and three adjective-ending patterns.
 - Study, partially missing cells, full-table rebuild, random recall, and mistake review. All exercises use typed answers.
 - Optional Genitiv for the applicable tables; no artificial forms for the plural of ein or pronoun Genitiv.
 - Browser-local progress, export to JSON, and review cleared after two later correct attempts.

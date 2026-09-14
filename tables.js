@@ -1,19 +1,20 @@
 (function () {
   'use strict';
-  const {tables,cells,matches} = window.GermanTables;
+  const {tables,cells,practiceCells,possessiveStems,matches} = window.GermanTables;
   const root = document.getElementById('tables-panel');
   const key = 'artikel-tables-v1';
   let saved = {}, storageOK = true;
   try { saved = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch { storageOK = false; }
   if (typeof saved !== 'object' || Array.isArray(saved)) saved = {};
   let records = {};
-  const validIds = new Set(tables.flatMap(t=>cells(t,true).map(c=>c.id)));
+  const validIds = new Set(tables.flatMap(t=>[...cells(t,true),...practiceCells(t,true)].map(c=>c.id)));
   for (const [id,value] of Object.entries(saved.records || {})) {
     if (validIds.has(id) && value && Number.isSafeInteger(value.attempts) && value.attempts >= 0 &&
         Number.isSafeInteger(value.correct) && value.correct >= 0 && value.correct <= value.attempts) {
       records[id] = {attempts:value.attempts,correct:value.correct,streak:Math.max(0,Number(value.streak)||0),pending:value.pending===true};
     }
   }
+  if(possessiveStems.some(([stem])=>'poss-'+stem===saved.selected)) saved.selected='possessives';
   let table = tables.find(t=>t.id===saved.selected) || tables[0];
   let genitive = saved.genitive === true, mode = 'study', round = [], position = 0, roundCorrect = 0, checked = false;
   const findTable = id => tables.find(t=>t.id===id);
@@ -30,8 +31,8 @@
     const streak=ok?old.streak+1:0;
     records[cell.id]={attempts:old.attempts+1,correct:old.correct+(ok?1:0),streak,pending:ok?(old.pending&&streak<2):true};
   }
-  function reviewCells(){return tables.flatMap(t=>cells(t,genitive)).filter(c=>records[c.id]?.pending)}
-  function format(t,answer){return t.kind==='ending'?'-'+answer:answer}
+  function reviewCells(){return tables.flatMap(t=>t.kind==='possessive'?[...cells(t,genitive),...practiceCells(t,genitive)]:cells(t,genitive)).filter(c=>records[c.id]?.pending)}
+  function format(t,answer){return t.kind==='ending'?'-'+answer:t.kind==='possessive'&&answer.length<3?(answer?'-'+answer:'—'):answer}
   function button(text,handler,primary=false){const b=el('button',text,primary?'primary':'');b.type='button';b.onclick=handler;actions.append(b);return b}
   root.innerHTML = `
     <h1>Make the tables stick.</h1>
@@ -54,15 +55,15 @@
     const url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download='artikel-table-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   };
   function updateProgress(){
-    const active=cells(table,genitive),practised=active.filter(c=>records[c.id]?.attempts>0).length;
-    root.querySelector('#table-progress').textContent=practised+' / '+active.length+' cells practised in this table';
+    const active=table.kind==='possessive'?[...cells(table,genitive),...practiceCells(table,genitive)]:cells(table,genitive),practised=active.filter(c=>records[c.id]?.attempts>0).length;
+    root.querySelector('#table-progress').textContent=practised+' / '+active.length+(table.kind==='possessive'?' endings & word forms practised':' cells practised in this table');
     const review=modes.querySelector('[data-mode="review"]');review.textContent='Review · '+reviewCells().length;
     persist();
   }
   function switchMode(next){
     mode=next;position=0;roundCorrect=0;
     if(mode==='recall'){
-      const active=shuffled(cells(table,genitive));
+      const active=shuffled(practiceCells(table,genitive));
       round=[...active.filter(c=>records[c.id]?.pending),...active.filter(c=>!records[c.id]?.pending)].slice(0,12);
     } else if(mode==='review') round=shuffled(reviewCells()).slice(0,12);
     render();
@@ -71,7 +72,7 @@
     checked=false;exercise.replaceChildren();actions.replaceChildren();result.textContent='';
     for(const b of modes.children){b.classList.toggle('active',b.dataset.mode===mode);b.setAttribute('aria-pressed',String(b.dataset.mode===mode))}
     root.querySelector('#case-label').hidden=table.kind==='pronoun'&&mode!=='review';
-    heading.textContent=table.title;note.textContent=mode==='study'?table.note:(table.kind==='ending'?'Type only the endings, with or without a hyphen.':'Write each form from memory.');root.querySelector('#table-source').textContent='Current table: '+table.source;
+    heading.textContent=table.title;note.textContent=mode==='study'?table.note:(table.kind==='possessive'?'Type the shared endings. Enter a dash (-) for no ending.':table.kind==='ending'?'Type only the endings, with or without a hyphen.':'Write each form from memory.');root.querySelector('#table-source').textContent='Current table: '+table.source;
     updateProgress();
     if(mode==='recall'||mode==='review'){renderRecall();return}
     const active=cells(table,genitive),hidden=new Set(mode==='rebuild'?active.map(c=>c.id):mode==='missing'?shuffled(active).slice(0,Math.ceil(active.length/2)).map(c=>c.id):[]);
@@ -92,6 +93,7 @@
         }line.append(td);
       });body.append(line);
     });grid.append(body);const wrapper=el('div',undefined,'grid-scroll');wrapper.append(grid);exercise.append(wrapper);
+    if(mode==='study'&&table.kind==='possessive'){exercise.append(el('p',possessiveStems.map(([stem,meaning])=>stem+' = '+meaning).join(' · '),'table-note'));exercise.append(el('p','Rebuild practises endings. Recall practises full words with different stems.','table-note'));}
     if(mode==='study'){button('Hide some cells →',()=>switchMode('missing'),true);button('Rebuild whole table',()=>switchMode('rebuild'));return}
     const check=button('Check table',()=>{
       if(checked)return;const blank=entries.find(e=>!e.input.value.trim());if(blank){result.textContent='Fill every empty cell first.';blank.input.focus();return}
@@ -113,8 +115,8 @@
     }
     const cell=round[position],t=findTable(cell.table);heading.textContent=t.title;note.textContent='';root.querySelector('#table-source').textContent='Current question: '+t.source;
     exercise.append(el('div',(mode==='review'?'Mistake review':'Recall')+' · '+(position+1)+' / '+round.length,'eyebrow'));
-    exercise.append(el('h3',cell.row+' · '+cell.col,'prompt'));
-    const form=el('form'),label=el('label',t.kind==='ending'?'Type the adjective ending':'Type the German form','recall-input'),input=el('input');input.type='text';input.autocomplete='off';input.setAttribute('autocapitalize','none');input.spellcheck=false;input.dataset.cell=cell.id;label.append(input);form.append(label);exercise.append(form);
+    exercise.append(el('h3',cell.row+' · '+cell.col+(cell.stem?' · '+cell.stem:''),'prompt'));
+    const form=el('form'),label=el('label',t.kind==='possessive'&&!cell.stem?'Type the ending (dash for no ending)':t.kind==='ending'?'Type the adjective ending':'Type the German form','recall-input'),input=el('input');input.type='text';input.autocomplete='off';input.setAttribute('autocapitalize','none');input.spellcheck=false;input.dataset.cell=cell.id;label.append(input);form.append(label);exercise.append(form);
     if(t.caseSensitive)exercise.append(el('p','Capitalisation matters for this table.','table-note'));
     const check=()=>{
       if(checked)return;

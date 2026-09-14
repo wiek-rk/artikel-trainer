@@ -30,12 +30,10 @@
     add(id,label,'1 · Articles',derEndings.map(row=>row.map(e=>stem+e)),
       'Used before a noun, these determiners show its gender, number and case. They use the der-word pattern.', articleSource + (id === 'welcher' ? ' (Genitiv extended using the der-word pattern)' : ''));
   }
-  for (const [stem,meaning] of [['mein','my'],['dein','your · informal singular'],['sein','his / its'],['ihr','her / their'],['Ihr','your · formal'],['unser','our'],['euer','your · informal plural']]) {
-    add('poss-'+stem, 'Possessivartikel · '+stem+' ('+meaning+')', '2 · Possessives', inflect(stem),
-      'The owner chooses the stem; the noun’s gender, number and case choose the ending. ' +
-      (stem === 'euer' ? 'Practise the chart’s shortened forms: euer → eure, euren, eurem, eurer, eures.' : stem === 'Ihr' ? 'Keep the capital I for formal address: Ihr, Ihre, Ihrem.' : 'Use the same endings as kein.'), articleSource,
-      {caseSensitive: stem === 'Ihr' || stem === 'ihr'});
-  }
+  const possessiveStems = [['mein','my'],['dein','your · informal singular'],['sein','his / its'],['ihr','her / their'],['Ihr','your · formal'],['unser','our'],['euer','your · informal plural']];
+  add('possessives', 'Possessivartikel · shared endings', '2 · Possessives', einEndings,
+    'Add the shared ending to mein, dein, sein, ihr, Ihr, unser or euer. A dash means no ending. Euer becomes eur- before an ending; formal Ihr keeps its capital I.', articleSource,
+    {kind:'possessive',caseSensitive:true});
   const people = ['ich · I','du · you (sing.)','er · he','es · it','sie · she','Sie · formal you','sie · they','wir · we','ihr · you (pl.)'];
   add('personal','Personalpronomen','3 · Pronouns',
     [['ich','mich','mir'],['du','dich','dir'],['er','ihn','ihm'],['es','es','ihm'],['sie','sie','ihr'],['Sie','Sie','Ihnen'],['sie','sie','ihnen'],['wir','uns','uns'],['ihr','euch','euch']],
@@ -59,12 +57,20 @@
       answer === null || (!includeGenitive && table.kind !== 'pronoun' && r === 3) ? [] :
         [{id:table.id+':'+r+':'+c, table:table.id, r, c, answer, row:table.rows[r], col:table.cols[c]}]));
   }
+  function practiceCells(table, includeGenitive = false) {
+    if(table.kind !== 'possessive') return cells(table,includeGenitive);
+    return possessiveStems.flatMap(([stem]) => cells(table,includeGenitive).map(cell => ({
+      ...cell, id:'poss-'+stem+':'+cell.r+':'+cell.c, stem,
+      answer:inflect(stem)[cell.r][cell.c]
+    })));
+  }
   function matches(table, value, answer) {
     let normalized = value.trim().normalize('NFC');
-    if (table.kind === 'ending') normalized = normalized.replace(/^[-−–]\s*/, '');
+    if (table.kind === 'possessive' && answer === '') return ['-','—','–','−'].includes(normalized);
+    if (table.kind === 'ending' || (table.kind === 'possessive' && answer.length < 3)) normalized = normalized.replace(/^[-−–]\s*/, '');
     return table.caseSensitive ? normalized === answer : normalized.toLocaleLowerCase('de') === answer.toLocaleLowerCase('de');
   }
-  const api = {tables,cells,matches};
+  const api = {tables,cells,practiceCells,possessiveStems,inflect,matches};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else host.GermanTables = api;
 })(globalThis);

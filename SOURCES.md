@@ -18,3 +18,7 @@ The tables follow the supplied B2 grammar materials.
 ## Progress
 
 Only the first checked attempt is recorded for each exercise cell. Showing Study earns no credit. Wrong answers enter Review; two subsequent correct attempts clear the cell. Review spans tables and follows the Genitiv filter. Progress uses the separate localStorage key `artikel-tables-v1` and can be exported as JSON. Storage failure leaves practice usable and displays a temporary-progress notice. Article rounds remain in memory as before.
+
+## Shared possessives
+
+One ending grid covers all seven stems. Rebuild tests endings (a dash means zero ending); Recall tests full words with a supplied stem. Existing per-stem records and mistakes keep their IDs and remain available in Review. Old possessive selections open the shared table. Endings and word-form progress are counted separately within that one section.

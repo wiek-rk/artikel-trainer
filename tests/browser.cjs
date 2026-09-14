@@ -43,7 +43,7 @@ const server=http.createServer((req,res)=>{
     for(const t of tables){
       await page.locator('#table-choice').selectOption(t.id);await page.locator('[data-mode="rebuild"]').click();
       assert.equal(await page.locator('#table-exercise input').count(),cells(t,true).length,t.id);
-      for(const c of cells(t,true))await page.locator('[data-cell="'+c.id+'"]').fill(c.answer);
+      for(const c of cells(t,true))await page.locator('[data-cell="'+c.id+'"]').fill(c.answer || '-');
       await page.getByRole('button',{name:'Check table',exact:true}).click();
       assert.equal(await page.locator('#table-exercise input.wrong').count(),0,t.id);
     }
@@ -56,16 +56,36 @@ const server=http.createServer((req,res)=>{
     const out=process.env.ARTIKEL_SCREENSHOT_DIR;
     if(out){fs.mkdirSync(out,{recursive:true});await page.screenshot({path:path.join(out,'tables-desktop.png'),fullPage:true})}
     await page.setViewportSize({width:360,height:900});
-    for(const id of ['definite','personal','poss-Ihr','adjective-mixed']){
+    for(const id of ['definite','personal','possessives','adjective-mixed']){
       await page.locator('#table-choice').selectOption(id);await page.locator('[data-mode="rebuild"]').click();
       assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),id+' overflows');
     }
     if(out)await page.screenshot({path:path.join(out,'tables-mobile.png'),fullPage:true});
+    // Old possessive selections and word-specific mistake history survive consolidation.
+    await page.evaluate(()=>localStorage.setItem('artikel-tables-v1',JSON.stringify({selected:'poss-Ihr',genitive:true,records:{'poss-Ihr:2:0':{attempts:3,correct:1,streak:0,pending:true}}})));
+    await page.reload();
+    assert.equal(await page.locator('#table-choice').inputValue(),'possessives');
+    assert.equal(await page.locator('#table-choice option').count(),11);
+    await page.locator('[data-mode="review"]').click();
+    assert.match(await page.locator('.prompt').innerText(),/Ihr/);
+    await page.locator('#table-exercise input').fill('ihrem');await page.keyboard.press('Enter');
+    assert.match(await page.locator('#table-result').innerText(),/Answer: Ihrem/);
+    await page.locator('[data-mode="review"]').click();
+    await page.locator('#table-exercise input').fill('Ihrem');await page.keyboard.press('Enter');
+    await page.locator('[data-mode="review"]').click();
+    await page.locator('#table-exercise input').fill('Ihrem');await page.keyboard.press('Enter');
+    assert.equal(await page.locator('[data-mode="review"]').innerText(),'Review · 0');
+    await page.locator('[data-mode="recall"]').click();
+    const id=await page.locator('#table-exercise input').getAttribute('data-cell');
+    assert.ok(id.startsWith('poss-'));
+    assert.match(await page.locator('.prompt').innerText(),new RegExp(id.split(':')[0].slice(5)));
+    await page.locator('[data-mode="study"]').click();
+    if(out)await page.screenshot({path:path.join(out,'possessives-mobile.png'),fullPage:true});
     // Corrupt or blocked storage must not prevent practice.
     const blocked=await browser.newContext();await blocked.addInitScript(()=>{Storage.prototype.getItem=()=>{throw Error('blocked')};Storage.prototype.setItem=()=>{throw Error('blocked')}});
     const p=await blocked.newPage();await p.goto(url+'#tables');assert.match(await p.locator('#table-storage').innerText(),/temporary/);await p.locator('[data-mode="recall"]').click();assert.equal(await p.locator('#table-exercise input').count(),1);await blocked.close();
     await page.evaluate(()=>localStorage.setItem('artikel-tables-v1','{bad json'));await page.reload();assert.equal(await page.locator('#table-choice').inputValue(),'definite');
     assert.deepEqual(errors,[]);
-    console.log('PASS: 17 tables graded, review persistence, two-correct recovery, no duplicate scoring, article navigation/keyboard isolation, responsive layouts, blocked/corrupt storage.');
+    console.log('PASS: 11 tables graded, review persistence, two-correct recovery, no duplicate scoring, article navigation/keyboard isolation, responsive layouts, blocked/corrupt storage.');
   }finally{await browser.close();server.close()}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1});
