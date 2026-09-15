@@ -128,10 +128,5 @@
     };
     form.onsubmit=e=>{e.preventDefault();check()};button('Check answer',check,true);
   }
-  function navigate(){
-    const showing=location.hash==='#tables';document.getElementById('article-panel').hidden=showing;root.hidden=!showing;
-    document.getElementById('settings').hidden=showing;
-    document.querySelectorAll('.app-nav a').forEach(a=>{if((a.hash==='#tables')===showing)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
-  }
-  addEventListener('hashchange',navigate);navigate();render();
+  render();
 })();

@@ -22,3 +22,11 @@ Only the first checked attempt is recorded for each exercise cell. Showing Study
 ## Shared possessives
 
 One ending grid covers all seven stems. Rebuild tests endings (a dash means zero ending); Recall tests full words with a supplied stem. Existing per-stem records and mistakes keep their IDs and remain available in Review. Old possessive selections open the shared table. Endings and word-form progress are counted separately within that one section.
+
+## Expression practice
+
+The first Nomen–Verb set contains 40 patterns selected from Nomen Verb Verbindungen B2.pdf, pages 1–3. The verb-preposition set contains 44 patterns selected from the supplied fixed-preposition chart, pages 1–5 and 7–11. Meanings and example sentences are written for this app. Study includes all selected patterns; practice rounds contain up to 12.
+
+Editorial decisions: the missing reflexive pronoun in sich Mühe geben is restored. The prompt meaning distinguishes keeping/breaking a promise, starting/practising a profession, anticipation with sich freuen auf and satisfaction with sich freuen über. Conversation-partner and topic meanings are separated. Sprechen von + Dativ is also accepted for the topic prompt; it is not treated as Akkusativ. Selected noun–verb synonyms are accepted without requiring the chart's exact wording. Infinitives are requested explicitly, so conjugated forms are not scored as infinitives.
+
+The source's inconsistent schimpfen mit + Akkusativ and schützen vor + Akkusativ rows are not included; the first set does not reproduce those entries. It also omits als constructions, which need a different treatment. Fixed verb-preposition combinations are taught as units, not by the spatial location/destination rule. Standalone preposition-case and verb-case sections remain future work.

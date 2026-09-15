@@ -1,0 +1,26 @@
+.app-nav{flex-wrap:wrap}
+.app-nav a{padding:12px 18px}
+.phrase-section{padding-bottom:24px;color:#26313b}
+.phrase-section h1{font-size:30px;letter-spacing:-.7px;margin:0 0 10px;overflow-wrap:anywhere}
+.phrase-intro,.phrase-progress{color:#665c4e;line-height:1.6}
+.phrase-modes,.phrase-actions{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.phrase-section button{font:inherit;padding:11px 17px;min-height:44px;border-radius:12px;border:1px solid #d9cdbb;background:#fffdf8;color:#26313b;cursor:pointer}
+.phrase-section button.active,.phrase-section button.primary{background:#26313b;color:#fffdf8;border-color:#26313b}
+.phrase-surface{background:#fffdf8;border-radius:24px;padding:24px;box-shadow:0 14px 35px #4b371e12}
+.phrase-section h2{font-size:23px;margin:0 0 18px}
+.phrase-section .phrase-prompt{font-size:30px;line-height:1.4;overflow-wrap:anywhere}
+.phrase-meaning{color:#665c4e;line-height:1.6;margin:0 0 24px}
+.phrase-eyebrow{color:#a8420a;font-size:13px;font-weight:700;margin:0 0 16px}
+.phrase-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.phrase-fields label{font-size:14px;font-weight:600;display:block}
+.phrase-fields input{box-sizing:border-box;display:block;width:100%;font:inherit;font-size:18px;background:#fff;color:#26313b;border:1px solid #b9ac98;border-radius:10px;min-height:48px;padding:12px;margin-top:8px}
+.phrase-fields input.correct{border:2px solid #278047;background:#f1faef}
+.phrase-fields input.wrong{border:2px solid #b3362d;background:#fff3ef}
+.phrase-feedback{line-height:1.65;min-height:24px}
+.phrase-feedback strong{font-size:21px;display:block}
+.phrase-section details{line-height:1.65;margin-top:16px;color:#665c4e}
+.phrase-section summary{cursor:pointer;min-height:44px;padding:8px 0;box-sizing:border-box}
+.expression-list details{border-bottom:1px solid #e7dfd2;margin:0}
+.expression-list summary{color:#26313b;font-weight:600}
+.expression-list p{margin:8px 0 16px}
+@media(max-width:560px){.phrase-surface{padding:20px 16px}.phrase-section h1{font-size:26px}.phrase-section .phrase-prompt{font-size:25px}.phrase-fields{grid-template-columns:1fr}.app-nav a{padding:10px 14px;font-size:14px}}
