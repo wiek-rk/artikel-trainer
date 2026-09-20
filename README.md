@@ -60,4 +60,10 @@ Verb + Präposition offers an initial 44 combinations from the fixed-preposition
 
 Both sections use 12-expression rounds and independent browser-local review records (`artikel-phrases-nvv-v1`, `artikel-phrases-preps-v1`). Two later correct attempts clear a mistake. The four sections keep their current exercise when switching navigation. Direct links: `#nvv` and `#preps`.
 
-These are selected first sets, not a transcription of every row in the charts. No general preposition-case or verb-case module is included yet. Keep all root HTML/JS/CSS files together for offline use. Run `node --test tests/*.test.cjs` for data checks and `node tests/phrases-browser.cjs` for expression browser checks (Playwright + Edge).
+These are selected first sets, not a transcription of every row in the charts. Keep all root HTML/JS/CSS files together for offline use. Run `node --test tests/*.test.cjs` for data checks and `node tests/phrases-browser.cjs` for expression browser checks (Playwright + Edge).
+
+## Prepositions and connectors
+
+**Präpositionen** (`#preposition-cases`) presents Dativ, Akkusativ and Wechselpräpositionen as an overlapping visual map, adds a compact Genitiv group, and then checks the case with sentence examples. The two-way questions make the location (`Wo?`) and direction (`Wohin?`) distinction explicit.
+
+**Konnektoren** (`#connectors`) groups coordinating connectors, subordinating connectors, conjunctive adverbs, and paired connectors by their verb-placement rule. Its clause builder lets you place word tokens in a canonical sentence order and explains the verb position after each correct answer.
