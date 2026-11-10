@@ -2,7 +2,15 @@
   const data=window.GermanGrammar;if(!data)return;
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let caseIndex=0,chosen='',caseAnswered=false,clauseIndex=0,built=[];
   const caseRoundSize=30;
-  const unseenCases=[...data.caseRounds];
+  function shuffle(items){
+    for(let index=items.length-1;index>0;index--){
+      const other=Math.floor(Math.random()*(index+1));
+      [items[index],items[other]]=[items[other],items[index]];
+    }
+    return items;
+  }
+  const caseOrder=shuffle([...data.caseRounds]);
+  const unseenCases=[...caseOrder];
   const seenCases=[];
   let caseRoundNumber=0, missedCases=[], score=0, includeGenitive=false, roundGenitive=false;
   let caseRound=startCaseRound();
@@ -25,14 +33,14 @@
     }
     seenCases.push(...fresh);
     caseRoundNumber++;
-    return round;
+    return shuffle(round);
   }
 
   function renderCases(){const item=caseRound[caseIndex],el=document.getElementById('preposition-panel');if(!el)return;el.innerHTML=`<div class="grammar-section"><section class="grammar-card"><div class="eyebrow">Learn the pattern</div><h2>Präpositionen & Fälle</h2><p>Start with the fixed groups. The middle group is <b>Wechselpräpositionen</b>: use Dativ for a location (<i>Wo?</i>) and Akkusativ for a direction or change (<i>Wohin?</i>).</p><div class="venn-wrap" aria-label="Preposition case groups"><div class="venn dat"><b>DATIV</b><small>${data.prepositionGroups.dativ.join(' · ')}</small></div><div class="venn two"><b>DATIV<br>oder<br>AKKUSATIV</b><small>${data.prepositionGroups.wechsel.join(' · ')}</small></div><div class="venn akk"><b>AKKUSATIV</b><small>${data.prepositionGroups.akkusativ.join(' · ')}</small></div></div><div class="case-legend"><span><b>Genitiv:</b> ${data.prepositionGroups.genitiv.join(' · ')}</span><span>Wo? = Dativ</span><span>Wohin? = Akkusativ</span></div></section><section class="grammar-card case-quiz"><div class="eyebrow">Round ${caseRoundNumber} · Case check ${caseIndex+1} / ${caseRound.length}</div><label class="case-setting"><input type="checkbox" id="case-genitive" ${includeGenitive?'checked':''}> Include Genitiv ${caseRoundNumber===1&&caseIndex===0&&!caseAnswered?'':'(next round)'}</label><div aria-live="polite"><b>${caseAnswered&&caseIndex+1===caseRound.length?'Final score':'Score'} · ${score} / ${caseRound.length} points</b></div><div class="case-question">${esc(item.sentence)}</div><p>Which case follows <b>${esc(item.prep)}</b>?</p><div class="case-options">${(roundGenitive?['Dativ','Akkusativ','Genitiv']:['Dativ','Akkusativ']).map(x=>`<button data-case="${x}" class="${chosen===x?'selected':''}" ${caseAnswered?'disabled':''}>${x}</button>`).join('')}</div><div class="grammar-feedback" aria-live="polite">${caseAnswered?(chosen===item.answer?'✓ Correct. ':'Try again next time. ')+esc(item.note):''}</div><button class="grammar-action" id="case-next" ${caseAnswered?'':'hidden'}>${caseIndex+1===caseRound.length?'Start next round':'Next case'} →</button></section></div>`;el.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>{chosen=b.dataset.case;if(chosen===item.answer)score++;else missedCases.push(item);caseAnswered=true;renderCases()});const genitive=el.querySelector('#case-genitive');
     genitive.onchange=()=>{
       includeGenitive=genitive.checked;
       if(caseRoundNumber===1&&caseIndex===0&&!caseAnswered){
-        unseenCases.splice(0,unseenCases.length,...data.caseRounds);
+        unseenCases.splice(0,unseenCases.length,...caseOrder);
         seenCases.length=0;
         caseRoundNumber=0;
         caseRound=startCaseRound();
