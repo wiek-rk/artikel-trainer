@@ -21,7 +21,7 @@ const server=http.createServer((req,res)=>{
       const firstId=await panel.locator('input[name=answer]').getAttribute('data-item');
       const first=deck.find(i=>i.id===firstId);
       await panel.locator('input[name=answer]').fill(kind==='nvv'?'wrong':first.pairs[0].prep);
-      if(kind==='preps')await panel.locator('input[name=case]').fill(first.pairs[0].grammaticalCase==='Dativ'?'Akk':'Dat');
+      if(kind==='preps')await panel.getByRole('radio',{name:first.pairs[0].grammaticalCase==='Dativ'?'Akkusativ':'Dativ'}).check();
       await panel.getByRole('button',{name:'Check answer'}).click();assert.equal(await panel.locator('[data-mode=review]').innerText(),'Review · 1');
       assert.equal(await p.locator('#attempts').innerText(),'0/30');
       const snapshot=await panel.locator('.phrase-feedback').innerText();
@@ -31,22 +31,22 @@ const server=http.createServer((req,res)=>{
       await panel.locator('[data-mode=review]').click();assert.equal(await panel.locator('input[name=answer]').getAttribute('data-item'),firstId);
       for(let n=0;n<2;n++){
         await panel.locator('input[name=answer]').fill(kind==='nvv'?first.answers[0]:first.pairs[0].prep);
-        if(kind==='preps')await panel.locator('input[name=case]').fill(first.pairs[0].grammaticalCase);
+        if(kind==='preps')await panel.getByRole('radio',{name:first.pairs[0].grammaticalCase}).check();
         await panel.getByRole('button',{name:'Check answer'}).click();
         assert.equal(await panel.locator('[data-mode=review]').innerText(),'Review · '+(n===0?1:0));
         await panel.getByRole('button',{name:'Finish round →'}).click();if(n===0)await panel.getByRole('button',{name:'Review again'}).click();
       }
       await panel.locator('[data-mode=practice]').click();
-      const ids=[];
-      for(let n=0;n<12;n++){
+      const ids=[], size=kind==="preps"?30:12;
+      for(let n=0;n<size;n++){
         const id=await panel.locator('input[name=answer]').getAttribute('data-item'),item=deck.find(x=>x.id===id);ids.push(id);
         await panel.locator('input[name=answer]').fill(kind==='nvv'?item.answers[0]:item.pairs[0].prep);
-        if(kind==='preps')await panel.locator('input[name=case]').fill(item.pairs[0].grammaticalCase);
+        if(kind==='preps')await panel.getByRole('radio',{name:item.pairs[0].grammaticalCase}).check();
         await panel.locator('input[name=answer]').press('Enter');
         assert.match(await panel.locator('.phrase-feedback').innerText(),/✓ Correct/);
-        await panel.getByRole('button',{name:n===11?'Finish round →':'Next expression →'}).click();
+        await panel.getByRole('button',{name:n===size-1?'Finish round →':'Next expression →'}).click();
       }
-      assert.equal(new Set(ids).size,12);assert.match(await panel.locator('.phrase-surface').innerText(),/12 \/ 12/);
+      assert.equal(new Set(ids).size,size);assert.ok((await panel.locator('.phrase-surface').innerText()).includes(size+' / '+size));
     }
     // Direct URLs, mobile layout and local error handling.
     const out=process.env.ARTIKEL_SCREENSHOT_DIR;if(out)fs.mkdirSync(out,{recursive:true});

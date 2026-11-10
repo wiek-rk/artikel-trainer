@@ -44,6 +44,37 @@
     ['time','Zeit','verbringen','spend time','Ich möchte mehr Zeit mit meiner Familie verbringen.']
   ];
   const prepRows = [
+    ['sorgen-fuer','sorgen','für','Akkusativ','provide for someone','Er sorgt für seine Familie.'],
+    ['sorgen-um','sich sorgen','um','Akkusativ','worry about someone','Sie sorgt sich um ihren Vater.'],
+    ['bewerben-um','sich bewerben','um','Akkusativ','apply for a position','Sie bewirbt sich um die Stelle.'],
+    ['bewerben-bei','sich bewerben','bei','Dativ','apply to an employer','Er bewirbt sich bei einem Verlag.'],
+    ['entscheiden-fuer','sich entscheiden','für','Akkusativ','decide in favour of something','Wir entscheiden uns für den günstigeren Tarif.'],
+    ['entscheiden-gegen','sich entscheiden','gegen','Akkusativ','decide against something','Sie entscheidet sich gegen den Kauf.'],
+    ['stimmen-fuer','stimmen','für','Akkusativ','vote in favour of a proposal','Ich stimme für den Antrag.'],
+    ['stimmen-gegen','stimmen','gegen','Akkusativ','vote against a proposal','Er stimmt gegen den Antrag.'],
+    ['leiden-unter','leiden','unter','Dativ','suffer under difficult conditions','Viele Menschen leiden unter der Hitze.'],
+    ['leiden-an','leiden','an','Dativ','suffer from a disease','Er leidet an einer seltenen Krankheit.'],
+    ['warnen-vor','warnen','vor','Dativ','warn someone about a danger','Sie warnt uns vor dem Sturm.'],
+    ['schuetzen-vor','schützen','vor','Dativ','protect against a hazard','Die Creme schützt vor der Sonne.'],
+    ['schaemen-fuer','sich schämen','für','Akkusativ','be ashamed of one’s behaviour','Er schämt sich für sein Verhalten.'],
+    ['gewöhnen-an','sich gewöhnen','an','Akkusativ','get used to a change','Ich gewöhne mich an den neuen Rhythmus.'],
+    ['anpassen-an','sich anpassen','an','Akkusativ','adapt to a new situation','Wir passen uns an die neuen Regeln an.'],
+    ['beitragen-zu','beitragen','zu','Dativ','contribute to an outcome','Alle tragen zu dem Erfolg bei.'],
+    ['fuehren-zu','führen','zu','Dativ','lead to a consequence','Das Missverständnis führt zu einem Streit.'],
+    ['gratulieren-zu','gratulieren','zu','Dativ','congratulate someone on an achievement','Ich gratuliere dir zu deinem Abschluss.'],
+    ['ueberzeugen-von','überzeugen','von','Dativ','convince someone of the benefits','Sie überzeugt mich von den Vorteilen.'],
+    ['abraten-von','abraten','von','Dativ','advise someone against a purchase','Ich rate dir von diesem Kauf ab.'],
+    ['erzaehlen-von','erzählen','von','Dativ','tell someone about an experience','Sie erzählt von ihrer ersten Reise.'],
+    ['berichten-ueber','berichten','über','Akkusativ','report on a subject','Die Zeitung berichtet über den Streik.'],
+    ['informieren-ueber','sich informieren','über','Akkusativ','find out about a topic','Ich informiere mich über den Studiengang.'],
+    ['nachdenken-ueber','nachdenken','über','Akkusativ','think something over','Wir denken über den Vorschlag nach.'],
+    ['diskutieren-ueber','diskutieren','über','Akkusativ','discuss a topic','Wir diskutieren über den Entwurf.'],
+    ['diskutieren-mit','diskutieren','mit','Dativ','discuss something with a person','Ich diskutiere mit meinem Kollegen.'],
+    ['streiten-um','streiten','um','Akkusativ','fight over possession of something','Die Kinder streiten um den Ball.'],
+    ['fehlen-an','fehlen','an','Dativ','be lacking in something','Es fehlt an geeigneten Räumen.'],
+    ['mangeln-an','mangeln','an','Dativ','be short of something','Es mangelt an bezahlbarem Wohnraum.'],
+    ['verfuegen-ueber','verfügen','über','Akkusativ','have something at one’s disposal','Die Schule verfügt über einen großen Saal.'],
+
     ['denken-an','denken','an','Akkusativ','think of someone or something','Ich denke oft an meinen Bruder.'],
     ['erinnern-an','sich erinnern','an','Akkusativ','remember an earlier experience','Ich erinnere mich an den ersten Schultag.'],
     ['glauben-an','glauben','an','Akkusativ','believe in someone’s ability','Ich glaube an dich.'],
@@ -91,6 +122,9 @@
   ];
   const nvv=nvvRows.map(([id,phrase,verbs,meaning,example])=>({id,phrase,meaning,example,answers:verbs.split('/')}));
   const preps=prepRows.map(([id,verb,prep,grammaticalCase,meaning,example])=>({id,verb,meaning,example,pairs:[{prep,grammaticalCase}]}));
+  for(const [id,prep,grammaticalCase] of [
+    ['erzaehlen-von','über','Akkusativ'],['berichten-ueber','von','Dativ']
+  ]) preps.find(item=>item.id===id).pairs.push({prep,grammaticalCase});
   // These alternatives are valid for this meaning, and must keep their own case.
   preps.find(x=>x.id==='sprechen-ueber').pairs.push({prep:'von',grammaticalCase:'Dativ'});
   const normalize=s=>String(s).trim().normalize('NFC').toLocaleLowerCase('de').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/\s+/g,' ');

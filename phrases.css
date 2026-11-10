@@ -24,3 +24,5 @@
 .expression-list summary{color:#26313b;font-weight:600}
 .expression-list p{margin:8px 0 16px}
 @media(max-width:560px){.phrase-surface{padding:20px 16px}.phrase-section h1{font-size:26px}.phrase-section .phrase-prompt{font-size:25px}.phrase-fields{grid-template-columns:1fr}.app-nav a{padding:10px 14px;font-size:14px}}
+
+.phrase-cases{margin:0;padding:0;border:0;min-width:0}.phrase-cases legend{padding:0;margin-bottom:6px}.phrase-cases label{display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0;padding:9px;border:1px solid #d8c7b2;border-radius:10px;cursor:pointer}.phrase-cases input[type=radio]{width:auto;margin:0;accent-color:#24303a}.phrase-cases label:has(:checked){background:#e5eef5}.phrase-cases label.correct{background:#dcfce7}.phrase-cases label.wrong{background:#fee2e2}

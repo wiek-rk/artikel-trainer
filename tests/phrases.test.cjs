@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {nvv,preps,grade}=require('../phrases-data.js');
 test('all selected patterns have stable unique IDs, meanings and examples',()=>{
-  assert.equal(nvv.length,40);assert.equal(preps.length,44);
+  assert.equal(nvv.length,40);assert.equal(preps.length,74);
   for(const deck of [nvv,preps]){assert.equal(new Set(deck.map(i=>i.id)).size,deck.length);assert.ok(deck.every(i=>i.meaning&&i.example))}
   for(const item of nvv)for(const answer of item.answers)assert.ok(grade('nvv',item,answer).ok);
   for(const item of preps)for(const pair of item.pairs)assert.ok(grade('preps',item,pair.prep,pair.grammaticalCase).ok);
